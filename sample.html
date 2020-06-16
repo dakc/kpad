@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kpad demo</title>
     <style>
-        body{
+        body {
             margin: 0px;
             padding: 0px;
         }
+
+        /* set the size for canvas*/
         .sign {
             width: 100%;
             height: 100vh;
@@ -24,11 +26,16 @@
     <script src="kpad.min.js"></script>
 
     <script>
+        const getParams = new URLSearchParams(window.location.search);
         const options = {
-            colors: ["red", "blue", "pink"],
+            colorList: ["red", "blue", "white", "yellow", "black"],
+            penColor: getParams.get("color") || "black",
+            backgroundColor: getParams.get("bg") || "green",
+            brushSize: getParams.get("size") || 1,
+            sizeIncreement: getParams.get("inc") || 10,
         };
         const parentElement = document.querySelector(".sign");
-        new kpad(parentElement, options);
+        const kpadInstance = new kpad(parentElement, options);
     </script>
 </body>
 
