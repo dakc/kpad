@@ -31,11 +31,37 @@ const options = {
 };
 new kpad(parentElement, options);
 ```
-## sample
-see here for [sample page](./sample.html).
-
 # Demo
-see here for [DEMO](https://dakc.github.io/kpad/sample.html)
+
+see here for [DEMONSTRATION](https://dakc.github.io/kpad/sample.html).
+
+This page shows various use cases.
+- download the content as image
+- show or hide controlbox -> 
+[pass "ctlbox=hide" in the url](https://dakc.github.io/kpad/sample.html?ctlbox=hide)
+- change the background from url -> 
+[pass "bg=color name" in the url](https://dakc.github.io/kpad/sample.html?bg=gray)
+- change the color list from url -> 
+[pass "colors=name of color separated by comma" in the url](https://dakc.github.io/kpad/sample.html?colors=red,blue,yellow)
+- change the default pen color from url -> 
+[pass "pen=color name" in the url](https://dakc.github.io/kpad/sample.html?pen=black)
+- change the default pen size from url -> 
+[pass "size=number" in the url](https://dakc.github.io/kpad/sample.html?size=5)
+
+## ※ multiple parameters with controlbox
+[https://dakc.github.io/kpad/sample.html?bg=teal&colors=red,green,blue,black,indigo,pink&size=2&pen=indigo](https://dakc.github.io/kpad/sample.html?bg=teal&colors=red,green,blue,black,indigo,pink&size=2&pen=indigo)
+
+![kpad usage](kpad.png)
+
+## ※ multiple parameters without controlbox
+[https://dakc.github.io/kpad/sample.html?bg=teal&colors=red,green,blue,black,indigo,pink&size=1&pen=indigo&ctlbox=hide](https://dakc.github.io/kpad/sample.html?bg=teal&colors=red,green,blue,black,indigo,pink&size=1&pen=indigo&ctlbox=hide)
+
+![kpad usage](kpad2.png)
+
+# How to implement
+see here for [how to use kpad](./sample.html) in html.
+
+
 
 # lisence
 MIT

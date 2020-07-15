@@ -3,18 +3,62 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kpad demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>kPad</title>
+    <script src="https://dakc.github.io/kpad/kpad.min.js"></script>
     <style>
         body {
             margin: 0px;
             padding: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
-        /* set the size for canvas*/
         .sign {
-            width: 100%;
-            height: 100vh;
+            width: calc(100vw - 4px);
+            height: calc(100vh - 4px);
+            margin: 0px;
+            padding: 0px;
+
+        }
+
+        canvas {
+            border: 1px dotted;
+        }
+
+        #kpad_control_box {
+            visibility: hidden;
+        }
+
+        .kpad-color-button{
+            border:2px solid !important;
+        }
+
+        button:not(.kpad-color-button) {
+            border-radius: 5px !important;
+        }
+
+        button.active {
+            border-color: #FF00FF !important
+        }
+
+        .kpad-clear-all-button {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABYElEQVRYR+3Xuy8EURTH8c8WXo1CpSG0OpXKH0Dj2WjoPOIREYnEvyAREe9O49GQKPRqkaj8Afgf0CB3M5vYjd2d2Z1FZG81c3Luvd8553fu3JORP2ZwUGBL8vqILnzEnZQpcNzBPI7xGncR9KA/8t/AWlyIYgAtCQFmsY8QgU5sYjUORNoAfVjHELawUg4ibYBePOAcw9jGcimIWgDcoxFnGEHQ1VIxiFoBBD02RBCj2MMi3guFXUuAHMQpxqLyDhWWB1FrgBzECcZxhLmvEGkBTOMQd3j+5vwI6RiM7EEbEzmftAC6cYn2EodXgGjDRZSSrGtaAHEOzWa8YBcLaUfg/wN0oCnOZxb4POEtslWcggFcV7B5mHIV/RfCc8UArZiMFkjKcYPbaiOQdNNi/hVH4E8A1EVYF2EaQqyqCuoirIvw10X44wBJm9M4gKEMp8pdyaptz+OAhEY23KCz4xMLnaUhzivRZAAAAABJRU5ErkJggg==');
+            background-size: contain;
+        }
+
+
+        button.ctl {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 10;
+            height: 50px;
+            width: 50px;
+            border-radius: 50% !important;
+            border: none;
+            background-color: #0b95f0;
         }
     </style>
 </head>
@@ -23,20 +67,31 @@
 
     <div class="sign"></div>
 
-    <script src="kpad.min.js"></script>
+    <button class="ctl">三</button>
 
     <script>
+        // ---------------------
+        // initialize kpad
         const getParams = new URLSearchParams(window.location.search);
+
         const options = {
-            colorList: ["red", "blue", "white", "yellow", "black"],
-            penColor: getParams.get("color") || "black",
-            backgroundColor: getParams.get("bg") || "green",
+            colorList: getParams.get("colors") && getParams.get("colors").split(",") || ["red", "green", "black",
+                "blue"
+            ],
+            penColor: getParams.get("pen") || "red",
+            backgroundColor: getParams.get("bg") || "white",
             brushSize: getParams.get("size") || 1,
-            sizeIncreement: getParams.get("inc") || 10,
+            sizeIncreement: getParams.get("inc") || 5,
         };
+
         const parentElement = document.querySelector(".sign");
-        const kpadInstance = new kpad(parentElement, options);
+        var ins = new kpad(parentElement, options);
+
+        // ----------------------
+        // add download button
+        function createDownloadButton(){const e=document.createElement("button");e.innerText="",e.style.backgroundImage="url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABd0lEQVRYR+3WsUocURjF8d82PoBFggQlJGwqy5QBm1hYGIIWQgiBpDHp0voEPoKmEQ1YKCIhWghrYWKrnZWCKCGCgi9gY/jgbthsdmd2Z7achWF34H7n/O+ZO8upKffZTuMzRWVqRQfT3FH6fl5UpwKoEqgSqBKoEqgSqBKoEshL4CEW03XWoXRkFZI6FtJ13a2w5AE8wQluMYHzNqFuAE/xA8MY7zD3VyYPIBZO4jtuEsRFC0QngMfJ/AGmsZ9V1wLgMw5xnLFwCt/wO0H86tIJR/ETI3iNvQzN6JEvAuAey/iUUyxfYQuXCeIKrQk8Sjsfwyx2cvSW8LEJ8CVuemi2Ub830jONM7GbZiLqA8SZmUOzrmdJxqbn+wUIwTBYxynuksMQnuENNnvYSCwpDBDDb7HWBvAugfXoXw4gTN5jJbnF79VendO6Ugk0vZoAH/o0L/0ICvj9NzKQBMqA/AMQ//Nfy6gVmI1DW4/XsIGXBQQGMdL4A0LjXUJpdsehAAAAAElFTkSuQmCC')",e.style.backgroundSize="contain";var t=document.createElement("style");return t.textContent=`.kpad-color-button{border-color: ${options.backgroundColor} !important}`,document.querySelector(".kpad-clear-all-button").textContent="",document.body.append(t),e.onclick=(async()=>{var e=document.querySelector("canvas");fillCanvasBackgroundWithColor(e,window.getComputedStyle(e,null).getPropertyValue("background-color")),downloadImage(e.toDataURL("image/png"),"kpad.png")}),e}function downloadImage(e,t){var o=document.createElement("a");o.href=e,o.download=t,document.body.appendChild(o),o.click()}function fillCanvasBackgroundWithColor(e,t){const o=e.getContext("2d");o.save(),o.globalCompositeOperation="destination-over",o.fillStyle=t,o.fillRect(0,0,e.width,e.height),o.restore()}window.addEventListener("load",e=>{document.getElementById("kpad_delete_box").appendChild(createDownloadButton());var t=document.getElementById("kpad_control_box");t.style.position="absolute",t.style.top=`${window.innerHeight-120}px`,t.style.display="none",t.style.visibility="visible";var o=document.querySelector("button.ctl");getParams.get("ctlbox")?o.addEventListener("click",()=>{t.style.display="grid",setTimeout(()=>{t.style.display="none"},1e4)}):(o.style.display="none",t.style.display="grid")});
     </script>
+
 </body>
 
 </html>
